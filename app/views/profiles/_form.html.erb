@@ -15,39 +15,57 @@
   <% end %>
 <div class="event_container">
   <div class="left-side" style="width: 25%; display: inline-block;">
-  
+  <% admin = (@current_user.role == "admin" && @current_user.profile.id != @profile.id) %>
   <br/>
   <div class="field">
     <%= f.label :family_name,"Name", :class => "our_form_fields"%><br/>
-    <%= f.text_field :family_name ,{class: "our_profile_fields"} %>
+    <% unless admin %>
+      <%= f.text_field :family_name ,{class: "our_profile_fields"} %>
+    <% else %>
+      <%= @profile.family_name %>
+    <% end %>
   </div>
 
   <div class="field">
     <%= f.label :name,"Vorname", :class => "our_form_fields" %><br/>
-    <%= f.text_field :name ,{class: "our_profile_fields"}%>
+    <% unless admin %>
+      <%= f.text_field :name ,{class: "our_profile_fields"}%>
+    <% else %>
+      <%= @profile.name %>
+    <% end %>
   </div>
 
   <div class="form-group">
     <%= f.label :birth_date,"Geburtsdatum", :class => "our_form_fields" %><br/>
-    <%= f.date_select :birth_date, :start_year => getBirthDateStart(), :end_year => getBirthDateEnd() %>
+    <% unless admin %>
+      <%= f.date_select :birth_date, :start_year => getBirthDateStart(), :end_year => getBirthDateEnd() %>
+    <% else %>
+      <%= @profile.birth_date %>
+    <% end %>
   </div>
 
   <%= f.fields_for :user do |ff| %>
     <div class="field">
       <%= ff.label :course, 'Studiengang', :class => "our_form_fields" %><br/>
-      <%= ff.collection_select :course_id, Course.order(:name), :id, :name_with_degree, {prompt: ""},{class: "form-control our_profile_fields"} %>
+      <% unless admin %>
+        <%= ff.collection_select :course_id, Course.order(:name), :id, :name_with_degree, {prompt: ""},{class: "form-control our_profile_fields"} %>
+      <% else %>
+        <%= @profile.user.course.degree + " " + @profile.user.course.name %>
+      <% end %>
     </div>
 
     <% if can? :edit, @user%>
-      <div class="field">
-        <%= ff.label :password , 'Neues Passwort wählen' %><br />
-        <%= ff.password_field :password %>
-      </div>
+      <% unless admin %>
+        <div class="field">
+          <%= ff.label :password , 'Neues Passwort wählen' %><br />
+          <%= ff.password_field :password %>
+        </div>
 
-      <div class="field">
-        <%= ff.label :password_confirmation, 'Neues Passwort bestätigen'%><br />
-        <%= ff.password_field :password_confirmation %>
-      </div>  
+        <div class="field">
+          <%= ff.label :password_confirmation, 'Neues Passwort bestätigen'%><br />
+          <%= ff.password_field :password_confirmation %>
+        </div>  
+      <% end %>
     <%end%>
     <% if current_user != nil && current_user.role == "admin" %>
       <div class="field">
@@ -58,7 +76,11 @@
 
   <div class="field">
     <%= f.label :bio, "Notizen:" , :class => "our_form_fields"%><br/>
-    <%= f.text_area :bio , :class => "our_profile_fields"%>
+    <% unless admin %>
+      <%= f.text_area :bio , :class => "our_profile_fields"%>
+    <% else %> 
+      <%= @profile.bio %>
+    <% end %>
   </div>
 
   </div>

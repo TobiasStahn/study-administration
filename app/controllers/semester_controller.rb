@@ -1,5 +1,9 @@
 class SemesterController < ApplicationController
+
   def index
+   
+    authorize! :index, @semester
+
   	records_result = ActiveRecord::Base.connection.execute("SELECT title, semester, events.id FROM events, events_users WHERE events.id = events_users.event_id AND user_id = " + current_user.id.to_s)
   	temp = records_result.values
 

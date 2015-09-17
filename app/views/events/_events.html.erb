@@ -2,6 +2,7 @@
 <%= hidden_field_tag :sort, params[:sort] %>
 
 <table class = "table table-striped" style=" table-layout: fixed; width: 100%;">
+
   <thead>
     <tr class="sorts">
       <th class="col-xs-1"><%= sortable "identifier", "Kürzel" %></th>
@@ -19,7 +20,7 @@
     <% if (index % 2 == 0) %>
       <tr>
         <td><%= event.identifier %></td>
-        <td><%= event.title %></td>
+        <td><strong><%= event.title %></strong></td>
         <td><%= event.prof %></td>
         <td><%= event.cycle %></td>
         <td><center><%= event.credits %></center></td>
@@ -59,7 +60,7 @@
        <% else %>
       <tr style="background-color: rgba(1,0,0,0)">
         <td><%= event.identifier %></td>
-        <td><%= event.title %></td>
+        <td><strong><%= event.title %></strong></td>
         <td><%= event.prof %></td>
         <td><%= event.cycle %></td>
         <td><center><%= event.credits %></center></td>

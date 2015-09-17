@@ -244,7 +244,7 @@
 <!-- check when we know what happens with profile pages. where can user/admin go -->
 <%= link_to 'Profil bearbeiten und bestandene Veranstaltungen hinzufügen', edit_profile_path(@profile), class: 'btn btn-default' %>
 <% if @profile.user_id == current_user.id %>
-  <%= link_to 'Meine Statistik', '/charts/index', class: 'btn btn-default' %>
+  <%= link_to 'Meine Statistik', '/chartsprofiles', class: 'btn btn-default' %>
 <% end %>
 
 <!-- where should back button lead? -->

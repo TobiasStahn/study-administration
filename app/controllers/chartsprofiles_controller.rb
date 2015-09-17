@@ -2,7 +2,9 @@ class ChartsprofilesController < ApplicationController
 	helper_method :executesql, :executesqlarray, :encrypt, :min_semester, :decrypt, :max_semester
 
 	def index
-		@users = current_user
+    authorize! :index, @chartsprofiles
+		
+    @users = current_user
 	end
 
 	def decrypt(semester)
@@ -27,8 +29,7 @@ class ChartsprofilesController < ApplicationController
     return data
   end
 
-  def max_semester(semester)
-  
+  def max_semester(semester)  
     max = decrypt(semester[0][0])  
     (1..semester.length-1).each do |i|
       if(decrypt(semester[i][0])> max)
@@ -38,8 +39,7 @@ class ChartsprofilesController < ApplicationController
     return max
   end
 
-  def min_semester(semester)
-    
+  def min_semester(semester)  
     min = decrypt(semester[0][0])  
     (1..semester.length-1).each do |i|
       if(decrypt(semester[i][0])< min)

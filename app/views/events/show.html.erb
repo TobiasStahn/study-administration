@@ -62,30 +62,31 @@
     <% end %>
   <% end %>
   </div>
-  <%= link_to 'Detailsbewertung ansehen', rating_path(@event.ratings.find_or_create_by(user_id: current_user.id)), class: 'btn btn-default right_side' %>
+  <%= link_to 'Detailbewertung ansehen', rating_path(@event.ratings.find_or_create_by(user_id: current_user.id)), class: 'btn btn-default right_side' %>
 </div>
 <br/>
+
 <div class="container_events" style="background-color: rgba(1,1,1,0)">  
   <!-- if logged in, show the Button to mark an event-->
-  <% if logged_in? %>
-    <% unless @event.users.find_by(id: current_user.id) %>
-
-        <!-- <%= button_to "Veranstaltung hinzufügen", :action => "mark_event", :id => @id%> -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Hinzufügen</button>
-    <% else %>
-    <p class="info_txt">
-         <strong>Die Veranstaltung <%= @event.title %> wurde zu deinem Plan hinzugefügt!</strong>
-    </p>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Ändern oder Entfernen</button>
-    </br>
-    <%end %>
+     <%if current_user.role !="admin"%>
+      <% if logged_in? %>
+        <% unless @event.users.find_by(id: current_user.id) %>
+          <!-- <%= button_to "Veranstaltung hinzufügen", :action => "mark_event", :id => @id%> -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Hinzufügen</button>
+      <% else %>
+      <p class="info_txt">
+           <strong>Die Veranstaltung <%= @event.title %> wurde zu deinem Plan hinzugefügt!</strong>
+      </p>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Ändern oder Entfernen</button>
+      <%end %>
+    <%end%>
 
     <% if can? :edit, Event %>
       <%= link_to 'Bearbeiten', edit_event_path(@event), class: 'btn btn-default' %>
     <%end%>
   <% end %>
   <!-- back button incorrect, should lead to event page ??? -->
-<%= link_to 'Zurück zu den Veranstaltungen', :events, class: 'btn btn-default' %>
+<%= link_to 'Zurück', :back, class: 'btn btn-default' %>
 
 
 <!-- Modal -->
@@ -96,7 +97,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3 class="modal-title">Veranstaltung belegen</h3>
+        <h3 class="modal-title">Veranstaltung hinzufügen</h3>
       </div>
       <div class="modal-body">
       <p>
@@ -148,12 +149,12 @@
         </p>
         <% unless @event.users.find_by(id: current_user.id) %>
         <div id="selector">
-          <%= button_to("Veranstaltung belegen", {:action => "mark_event", :id => @id, :semester => ""}, :class => "btn btn-success") %>
+          <%= button_to("Veranstaltung hinzufügen", {:action => "mark_event", :id => @id, :semester => ""}, :class => "btn btn-success") %>
         </div>
         <%else%>
           <div class="my_div_container">
             <div id="selector" class="my_div_2">
-            <%= button_to("Veranstaltung belegen", {:action => "mark_event", :id => @id, :semester => ""}, :class => "btn btn-success") %>
+            <%= button_to("Veranstaltung hinzufügen", {:action => "mark_event", :id => @id, :semester => ""}, :class => "btn btn-success") %>
             </div>
           <div class="my_div_2">  
           <%= button_to("Veranstaltung abwählen", {:action => "demark_event", :id => @id}, :class => "btn btn-danger") %>
@@ -169,4 +170,3 @@
 
   </div>
 </div>
-

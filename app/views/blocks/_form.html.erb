@@ -1,39 +1,45 @@
-<div class="error">
-<%= form_for(@block) do |f| %>
-  <% if @block.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@block.errors.count, "error") %> prohibited this block from being saved:</h2>
+<%if can? :manage, @block%>
 
-      <ul>
-      <% @block.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+  <div class="error">
+  <%= form_for(@block) do |f| %>
+    <% if @block.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@block.errors.count, "error") %> prohibited this block from being saved:</h2>
+
+        <ul>
+        <% @block.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+    </div>
+
+    <div class="field">
+      <%= f.label :name, 'Name' %><br>
+      <%= f.text_field :name %>
+    </div>
+    <div class="field">
+      <%= f.label :credits_min, 'Zu erreichende Credits' %><br>
+      <%= f.number_field :credits_min %>
+    </div>
+    <%= f.label :event_ids, 'Veranstaltungen' %><br>
+    <div class="box" style="background-color: #f9f9f9; height:500px; border: 1px solid #999999;border-radius:5px;padding:2px" >
+      <div class="overflow_to_scroll" style="height:495px" >
+        <td colspan="8">
+        <%= f.collection_check_boxes :event_ids, Event.all.order("title"), :id, :title, {selected: @block.event_ids}, {multiple: true} do |b| %>
+          <%= b.label { b.check_box + b.text } %><br>
+        <% end %>
+        </td>
+      </div>
+    </div>
+
+    <div class="actions">
+      <br>
+      <%= f.submit "Abschicken",class: "btn btn-success" %>
     </div>
   <% end %>
-  </div>
-
-  <div class="field">
-    <%= f.label :name, 'Name' %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :credits_min, 'Zu erreichende Credits' %><br>
-    <%= f.number_field :credits_min %>
-  </div>
-  <%= f.label :event_ids, 'Veranstaltungen' %><br>
-  <div class="box" style="background-color: #f9f9f9; height:500px; border: 1px solid #999999;border-radius:5px;padding:2px" >
-    <div class="overflow_to_scroll" style="height:495px" >
-      <td colspan="8">
-      <%= f.collection_check_boxes :event_ids, Event.all.order("title"), :id, :title, {selected: @block.event_ids}, {multiple: true} do |b| %>
-        <%= b.label { b.check_box + b.text } %><br>
-      <% end %>
-      </td>
-    </div>
-  </div>
-
-  <div class="actions">
-    <br>
-    <%= f.submit "Abschicken",class: "btn btn-success" %>
-  </div>
+<%end%>
+<% if cannot? :manage, @block %>
+    <%= not_authorized("Keine Rechte um Blockübersicht aufzurufen") %>
 <% end %>

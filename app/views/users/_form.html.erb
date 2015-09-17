@@ -1,40 +1,46 @@
-<%= form_for(@user) do |f| %>
-  <div class = "same_width1">
-    <div class="field">
-      <%= f.label :email, 'Email-Adresse eingeben' %><br/>
-      <%= f.text_field :email, class: "same_width1_input" %>
-    </div>
-
-    <%= f.fields_for :profiles do |builder| %>
+<% if can? :create, @user %>
+  <%= form_for(@user) do |f| %>
+    <div class = "same_width1">
       <div class="field">
-        <%= builder.label :name, 'Vorname' %>
-        <%= builder.text_field :name, class: "same_width1_input" %>
+        <%= f.label :email, 'Email-Adresse eingeben' %><br/>
+        <%= f.text_field :email, class: "same_width1_input" %>
+      </div>
+
+      <%= f.fields_for :profiles do |builder| %>
+        <div class="field">
+          <%= builder.label :name, 'Vorname' %>
+          <%= builder.text_field :name, class: "same_width1_input" %>
+        </div>
+
+        <div class="field">
+          <%= builder.label :family_name, 'Name' %>
+          <%= builder.text_field :family_name, class: "same_width1_input" %>
+        </div>
+      <% end %>
+
+      <div class="field">
+       <%= f.label :course , 'Studiengang wählen' %><br />
+       <%= f.collection_select :course_id, Course.order(:name), :id, :name_with_degree, {prompt: ""},{class: "form-control our_profile_fields"} %>
+      </div>
+
+      <!-- virtual field, that will hold the password before it is encrypted into the database -->
+      <div class="field">
+       <%= f.label :password , 'Passwort wählen' %><br />
+       <%= f.password_field :password,  class: "same_width1_input" %>
       </div>
 
       <div class="field">
-        <%= builder.label :family_name, 'Name' %>
-        <%= builder.text_field :family_name, class: "same_width1_input" %>
+       <%= f.label :password_confirmation, 'Passwort wiederholen'%><br />
+       <%= f.password_field :password_confirmation, class: "same_width1_input" %>
+      </div>  
+      
+      <div class="actions">
+       <%= f.submit "Abschicken", class: "btn btn-success my_button1" %>  
       </div>
-    <% end %>
-
-    <div class="field">
-     <%= f.label :course , 'Studiengang wählen' %><br />
-     <%= f.collection_select :course_id, Course.order(:name), :id, :name_with_degree, {prompt: ""},{class: "form-control our_profile_fields"} %>
     </div>
-
-    <!-- virtual field, that will hold the password before it is encrypted into the database -->
-    <div class="field">
-     <%= f.label :password , 'Passwort wählen' %><br />
-     <%= f.password_field :password,  class: "same_width1_input" %>
-    </div>
-
-    <div class="field">
-     <%= f.label :password_confirmation, 'Passwort wiederholen'%><br />
-     <%= f.password_field :password_confirmation, class: "same_width1_input" %>
-    </div>  
-    
-    <div class="actions">
-     <%= f.submit "Abschicken", class: "btn btn-success my_button1" %>  
-    </div>
-  </div>
+  <% end %>
+<% end %>
+<!-- not authorized redirected root path-->
+<% if cannot? :create, @user %>
+    <%= not_authorized("Keine Rechte um Userübersicht aufzurufen") %>
 <% end %>

@@ -16,8 +16,6 @@ set_stars = (form_id, stars) ->
     i++
   return
 
-
-
 $ ->
   $('.rating_star').click ->
     star = $(this)
@@ -26,7 +24,6 @@ $ ->
     stars = star.attr('data-stars')
     column = star.attr('data-column')
     $('#' + form_id + '_stars').val stars
-
     $.ajax
       type: 'post'
       url: "/ratings/rate"   

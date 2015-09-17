@@ -1,7 +1,4 @@
 class UsersController < ApplicationController
-  #cancancan authorizingController
-
-  #load_and_authorize_resource
   
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
@@ -43,6 +40,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
+    authorize! :update, @user
     
     respond_to do |format|
       if @user.update(user_params)

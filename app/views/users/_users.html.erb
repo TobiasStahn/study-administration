@@ -1,3 +1,4 @@
+<% if can? :manage, @user %>
 <%= hidden_field_tag :direction, params[:direction] %>
 <%= hidden_field_tag :sort, params[:sort] %>
 <!-- new table design for all the users -->
@@ -79,3 +80,8 @@
 <div class="digg_pagination">
   <%= will_paginate @users%>
 </div>
+<% end %>
+<!-- not authorized redirected root path-->
+<% if cannot? :manage, @user %>
+    <%= not_authorized("Keine Rechte um User Übersicht aufzurufen") %>
+<% end %>

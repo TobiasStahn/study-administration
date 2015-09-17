@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   authenticates_with_sorcery!
   
   # set different User roles
-  ROLES = %w[admin moderator student]
+  ROLES = %w[admin student guest]
 
   # validates password and email
   validates :password, length: { minimum: 3 }, :on=>[:create]

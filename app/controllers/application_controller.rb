@@ -1,4 +1,13 @@
 class ApplicationController < ActionController::Base
+  
+rescue_from CanCan::AccessDenied do |exception|
+	respond_to do |format|
+		format.json {render nothing: true, status: :forbidden }
+		format.html {redirect_to main_app.root_url, :alert => exception.message}
+	end
+end
+
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   helper_method :get_current_semester_and_year_from_date, :convert_date_to_number

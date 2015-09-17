@@ -1,4 +1,7 @@
-class ProfilesController < ApplicationController
+class ProfilesController < ApplicationController 
+   
+  load_and_authorize_resource
+
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
 
   # GET /profiles
@@ -10,7 +13,7 @@ class ProfilesController < ApplicationController
   # GET /profiles/1
   # GET /profiles/1.json
   def show
-    @users = current_user
+    
   end
 
   # GET /profiles/new
@@ -42,36 +45,38 @@ class ProfilesController < ApplicationController
       if !current_user.nil?
         if current_user.role == "admin" || current_user.id == @profile.user.id 
           valid = true
-          params[:profile][:id].each do |i|
-            unless i.blank? or i.nil?
-              if params[('semester' + i.to_s).to_sym].nil?
-                valid = false
+          unless params[:event].nil?
+            params[:event][:event_ids].each do |i|
+              unless i.blank? or i.nil?
+                if params[('semester' + i.to_s).to_sym].nil?
+                  valid = false
+                end
               end
             end
-          end
-          # Passed events are delivered in the join table events_users, while the profil is updated.
-          params[:profile][:id].each do |i| 
-            unless i.blank? or i.nil?
-              event = Event.find(i)
-              if valid
-                if !event.users.find_by(id: current_user.id)
-                  event.users << current_user 
-                  cu = event.events_users.find_by(user_id: current_user.id)
-                  cu.semester = params[('semester' + i.to_s).to_sym]
-                  cu.save!
+            # Passed events are delivered in the join table events_users, while the profil is updated.
+            params[:event][:event_ids].each do |i| 
+              unless i.blank? or i.nil?
+                event = Event.find(i)
+                if valid
+                  if !event.users.find_by(id: current_user.id)
+                    event.users << current_user 
+                    cu = event.events_users.find_by(user_id: current_user.id)
+                    cu.semester = params[('semester' + i.to_s).to_sym]
+                    cu.save!
+                  else 
+                    event.users.delete(current_user.id)
+                    event.users << current_user 
+                    cu = event.events_users.find_by(user_id: current_user.id)
+                    cu.semester = params[('semester' + i.to_s).to_sym]
+                    cu.save!
+                  end  
                 else 
-                  event.users.delete(current_user.id)
-                  event.users << current_user 
-                  cu = event.events_users.find_by(user_id: current_user.id)
-                  cu.semester = params[('semester' + i.to_s).to_sym]
-                  cu.save!
-                end  
-              else 
-                redirect_to :back, alert: "Zu jeder bestandenen Veranstaltung muss das Semester angegeben werden!" and return
+                  redirect_to :back, alert: "Zu jeder bestandenen Veranstaltung muss das Semester angegeben werden!" and return
+                end
               end
             end
           end
-          if @profile.update(profile_params.except(:user_attributes))
+          if @profile.update(profile_params.except(:user_attributes).except(:event))
             redirect_to "/profiles/#{@profile.id}", notice: "Profil erfolgreich bearbeitet!" and return
           else
             redirect_to '/profiles/#{@profile.id}/edit', alert: "Fehler. Bitte nochmal versuchen." and return

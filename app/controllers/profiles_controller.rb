@@ -13,8 +13,7 @@ class ProfilesController < ApplicationController
   # GET /profiles/1
   # GET /profiles/1.json
   def show
-    @users = current_user
-    @profile = @users.profile
+    
   end
 
   # GET /profiles/new

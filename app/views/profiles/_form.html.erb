@@ -50,7 +50,9 @@
       <% unless admin %>
         <%= ff.collection_select :course_id, Course.order(:name), :id, :name_with_degree, {prompt: ""},{class: "form-control our_profile_fields"} %>
       <% else %>
-        <%= @profile.user.course.degree + " " + @profile.user.course.name %>
+        <% unless @profile.user.course.nil? %>
+          <%= @profile.user.course.degree + " " + @profile.user.course.name %>
+        <% end %>
       <% end %>
     </div>
 

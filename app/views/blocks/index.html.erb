@@ -1,7 +1,7 @@
-<h1><i>Module</i></h1>
-
+<h1 style="font-size:2vw; padding:1%"><i>Meine Modulübersicht</i></h1>
+<br/>
 <!-- changed layout of table -->
-<table class="table table-striped">
+<!-- <table class="table table-striped">
   <thead>
     <tr>
       <th>Name</th>
@@ -9,7 +9,7 @@
       <th>Veranstaltungen</th>
       <th style="width:20%"></th>
     </tr>
-  </thead>
+  </thead> -->
 
   <!-- import progress bar from web, not trivial to handle alternatively -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/trontastic/jquery-ui.css">
@@ -21,11 +21,128 @@
 
   <!-- changed links to buttons -->
   <!-- added tooltip to glyphicons -->
-  <tbody>
-    <% @blocks.order("name").each do |block| %>
+  <!-- <tbody> -->
+
+  <% @blocks.order("name").each_with_index do |block,index| %>  
+    <%if (index % 2 == 0) %>
+    <div class="same_height" style="overflow:hidden; padding:1%">
+    <div class="make_100">
+      <table class="left_table">
+        <tr>
+          <td style="font-size:1.15vw; line-height: 1.5vw;"><strong><%= block.name %></strong></td> </tr>
+          <tr>
+          <% if current_user && current_user.role != 'admin' && current_user.course%>
+            <% sql = "SELECT sum(events.credits) FROM users, blocks, events, events_users, blocks_events WHERE " + current_user.id.to_s  + " = users.id AND users.id = events_users.user_id AND events_users.event_id = events.id AND events.id = blocks_events.event_id AND blocks_events.block_id = blocks.id AND blocks.id = " + block.id.to_s + ";" %>
+            <% records_result = ActiveRecord::Base.connection.execute(sql) %>
+            <% result = records_result.getvalue(0, 0) %>
+            <% if result.nil? %>
+              <% result = 0 %>
+            <% end %>
+            <% progressbarId += 1 %>
+            <td style="padding-top: 3%; padding-bottom: 3%;">
+            <p style="font-size:1vw; line-height:1vw;"><%= result.to_s + " / " + block.credits_min.to_s + " ECTS" %></p>
+            <div id="<%= progressbarId %>" class="progressbar my_progress" value="<%= result %>" max="<%= block.credits_min %>"></div>
+          <% else %>
+            <td>
+          <% end %>
+          <div class="btn-group btn-group-justified">
+            <% if can? :edit, @block %>
+            <%= link_to edit_block_path(block), class: "btn btn-default" do %>
+              <span class="has-tooltip" data-toggle="tooltip" title="Bearbeiten">            
+                <i class="glyphicon glyphicon-pencil middle_icon"></i>
+              </span>
+            <% end %>
+            <% end %>
+            <% if can? :destroy, @block %>
+            <%= link_to block, method: :delete, data: { confirm: 'Sicher?' } , class: "btn btn-default" do %>
+              <span class="has-tooltip" data-toggle="tooltip" title="Löschen">
+                <i class="glyphicon glyphicon-trash middle_icon"></i>
+              </span>
+            <% end %>
+            <% end %>
+            </div>
+            </td>
+            </tr>
+          <!-- <td><%= block.credits_min %></td> -->
+          <td>
+            <table class="table2">
+              <% e = block.events.order("title").map %>
+                <% e.each do |event| %>
+                  <% if current_user && current_user.events_users.map(&:event_id).include?(event.id) %>
+                    <% semester = event.events_users.find_by_user_id(current_user.id).semester %>
+                    <% unless semester.nil? %>
+                      <% case convert_date_to_number(semester) %>
+                        <% when "bestanden" %>
+                          <tr>
+                            <td style="color:#44E444">
+                              <%= event.title + " (" + event.credits.to_s + ")" %>
+                              <br/>
+                            </td>
+                          </tr>
+                        <%when "geplant"%>
+                          <tr>
+                            <td style="color:#45C3E6">
+                              <%= event.title + " (" + event.credits.to_s + ")" %>
+                              <br/>
+                            </td>
+                          </tr>
+                      <% end %>
+                    <% end %>
+                  <% else %>
+                    <tr>
+                      <td>
+                        <%= event.title + " (" + event.credits.to_s + ")" %>
+                        <br/>
+                      </td>
+                    </tr>
+                  <% end %>
+              <% end %>
+          </table>
+          </td>
+        </tr>
+    <!-- </tbody> -->
+  </table>
+  </div>
+  <div class="make_100" style="width:2%; background: rgba(1,1,1,0);"></div>
+<%else%>
+<div class="make_100">
+<table class="right_table">
       <tr>
-        <td><%= block.name %></td>
-        <td><%= block.credits_min %></td>
+        <td style="font-size:1.15vw; line-height: 1.5vw;"><strong><%= block.name %></strong></td> </tr>
+        <tr>
+        <% if current_user && current_user.role != 'admin' && current_user.course%>
+          <% sql = "SELECT sum(events.credits) FROM users, blocks, events, events_users, blocks_events WHERE " + current_user.id.to_s  + " = users.id AND users.id = events_users.user_id AND events_users.event_id = events.id AND events.id = blocks_events.event_id AND blocks_events.block_id = blocks.id AND blocks.id = " + block.id.to_s + ";" %>
+          <% records_result = ActiveRecord::Base.connection.execute(sql) %>
+          <% result = records_result.getvalue(0, 0) %>
+          <% if result.nil? %>
+            <% result = 0 %>
+          <% end %>
+          <% progressbarId += 1 %>
+          <td style="padding-top: 3%; padding-bottom: 3%;">
+          <p style="font-size:1vw; line-height:1vw;"><%= result.to_s + " / " + block.credits_min.to_s + " ECTS" %></p>
+          <div id="<%= progressbarId %>" class="progressbar my_progress" value="<%= result %>" max="<%= block.credits_min %>"></div>
+        <% else %>
+          <td>
+        <% end %>
+        <div class="btn-group btn-group-justified">
+          <% if can? :edit, @block %>
+          <%= link_to edit_block_path(block), class: "btn btn-default" do %>
+            <span class="has-tooltip" data-toggle="tooltip" title="Bearbeiten">            
+              <i class="glyphicon glyphicon-pencil middle_icon"></i>
+            </span>
+          <% end %>
+          <% end %>
+          <% if can? :destroy, @block %>
+          <%= link_to block, method: :delete, data: { confirm: 'Sicher?' } , class: "btn btn-default" do %>
+            <span class="has-tooltip" data-toggle="tooltip" title="Löschen">
+              <i class="glyphicon glyphicon-trash middle_icon"></i>
+            </span>
+          <% end %>
+          <% end %>
+          </div>
+          </td>
+          </tr>
+        <!-- <td><%= block.credits_min %></td> -->
         <td>
           <table class="table2">
             <% e = block.events.order("title").map %>
@@ -61,42 +178,15 @@
             <% end %>
         </table>
         </td>
-        <% if current_user && current_user.role != 'admin' && current_user.course%>
-          <% sql = "SELECT sum(events.credits) FROM users, blocks, events, events_users, blocks_events WHERE " + current_user.id.to_s  + " = users.id AND users.id = events_users.user_id AND events_users.event_id = events.id AND events.id = blocks_events.event_id AND blocks_events.block_id = blocks.id AND blocks.id = " + block.id.to_s + ";" %>
-          <% records_result = ActiveRecord::Base.connection.execute(sql) %>
-          <% result = records_result.getvalue(0, 0) %>
-          <% if result.nil? %>
-            <% result = 0 %>
-          <% end %>
-          <% progressbarId += 1 %>
-          <td>
-          <%= result.to_s + " / " + block.credits_min.to_s + " ECTS" %>
-          <div id="<%= progressbarId %>" class="progressbar" value="<%= result %>" max="<%= block.credits_min %>"></div>
-        <% else %>
-          <td>
-        <% end %>
-        <div class="btn-group btn-group-justified">
-          <% if can? :edit, @block %>
-          <%= link_to edit_block_path(block), class: "btn btn-default" do %>
-            <span class="has-tooltip" data-toggle="tooltip" title="Bearbeiten">            
-              <i class="glyphicon glyphicon-pencil middle_icon"></i>
-            </span>
-          <% end %>
-          <% end %>
-          <% if can? :destroy, @block %>
-          <%= link_to block, method: :delete, data: { confirm: 'Sicher?' } , class: "btn btn-default" do %>
-            <span class="has-tooltip" data-toggle="tooltip" title="Löschen">
-              <i class="glyphicon glyphicon-trash middle_icon"></i>
-            </span>
-          <% end %>
-          <% end %>
-          </div>
-          </td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
 
+  <!-- </tbody> -->
+</table>
+</div>
+</div>
+<%end%>
+
+<% end %>
 <br>
 <%if can? :create, @block%>
    <%= link_to 'Neuer Block', new_block_path, class: "btn btn-success" %>

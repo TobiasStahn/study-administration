@@ -55,6 +55,7 @@ class RatingsController < ApplicationController
     authorize! :show, @rating
    @rating = Rating.find(params[:id])
    @event = Rating.find(params[:id]).event
+   @user = current_user
   end
 
   private

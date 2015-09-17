@@ -2,9 +2,8 @@
 <script src="http://code.highcharts.com/modules/data.js"></script>
 <script src="http://code.highcharts.com/modules/drilldown.js"></script>
 <%begin%>
+
 <div id="container" style=""></div>
-
-
 <!-- sql query select all semester from event of the current user -->
 
 <%semester_user = executesqlarray("SELECT semester FROM events_users eu, events e WHERE e.id = eu.event_id  and user_id =" + @users.id.to_s + " GROUP BY semester ;")%>
@@ -20,10 +19,10 @@ $(function () {
             zoomType: 'xy'
         },
         title: {
-            text: 'Erreichte Credits je Semester'
+            text: 'Credits je Semester'
         },
         subtitle: {
-            text: ''
+            text: 'Vergleich'
         },
         xAxis: [{
             categories: [
@@ -71,9 +70,9 @@ $(function () {
         legend: {
             layout: 'vertical',
             align: 'left',
-            x: 120,
+            x: 80,
             verticalAlign: 'top',
-            y: 100,
+            y: 30,
             floating: true,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
@@ -136,5 +135,5 @@ $(function () {
 });
 </script>
 <%rescue%>
-<h1>Keine ausreichenden Daten</h1>
+<h1 style="font-size:2vw;">Keine ausreichenden Daten</h1>
 <%end%>

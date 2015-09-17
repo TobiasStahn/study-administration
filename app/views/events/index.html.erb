@@ -1,6 +1,6 @@
 <% if can? :read, @event%>
 <%= form_tag events_path, :method => 'get', :id => "events_search", remote: true do %>
-    <h1 class="aligned_search"><i>Veranstaltungen</i></h1>
+    <h1 class="aligned_search" style="font-size:2vw;"><i>Veranstaltungen</i></h1>
     <p class="aligned_search">
       <%= text_field_tag :search, params[:search], class: "text_field_r", :placeholder => "Finde Veranstaltung..." %>
       <%= submit_tag "Suche", :name => nil, class: 'btn btn-primary' %>

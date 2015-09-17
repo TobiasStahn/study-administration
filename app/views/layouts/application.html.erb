@@ -20,7 +20,7 @@
         <li class="topmenu"><a class="active logo" href="/">Home</a></li>
         <% if current_user %>
         <!-- Navigation bar items -->
-          <li class="topmenu"><a><center>Meine Übersicht</center></a>
+          <li class="topmenu"><a><center>Übersicht</center></a>
             <ul>
               <li class="submenu"><a href="/courses">Studienplaner</a></li>
               <li class="submenu"><a href="/semester/index">Semesterübersicht</a></li>
@@ -29,7 +29,7 @@
             </ul>
           </li>
         
-          <li class="topmenu"><a href="/events"><center>Veranstaltungsübersicht</center></a>
+          <li class="topmenu"><a href="/events"><center>Veranstaltungen</center></a>
           </li>
         <% end %>
       </ul>   
@@ -43,7 +43,7 @@
         <!-- change .id to .role when role is updated from other group -->
         <li class="topmenu active_user">
           
-          <a href="/profiles/<%=current_user.profile.id%>"><center><span class="glyphicon glyphicon-user"></span> <%= current_user.profile.name %></center></a>
+          <a class="hide_small_icon" href="/profiles/<%=current_user.profile.id%>"><span class="glyphicon glyphicon-user"></span><div class="hide_small" style="white-space: nowrap;"><%= current_user.profile.name %></div></a>
 
           <ul>
           <!-- if else case for different submenues depending on roles -->

@@ -67,11 +67,13 @@
         </div>  
       <% end %>
     <%end%>
-    <% if current_user != nil && current_user.role == "admin" %>
-      <div class="field">
-      <%= ff.label :role, "Status", :class => "our_form_fields"%><br/> <%= ff.collection_select(:role, User::ROLES, :to_s, lambda{|i| i.to_s.humanize}, {prompt: ""},{class: "form-control our_profile_fields"}) %> 
-      </div>
-    <% end %> 
+    <%if can? :destroy, @profile%>
+      <% if current_user != nil && current_user.role == "admin" %>
+        <div class="field">
+        <%= ff.label :role, "Status", :class => "our_form_fields"%><br/> <%= ff.collection_select(:role, User::ROLES, :to_s, lambda{|i| i.to_s.humanize}, {prompt: ""},{class: "form-control our_profile_fields"}) %> 
+        </div>
+      <% end %> 
+    <% end %>
   <% end %>
 
   <div class="field">

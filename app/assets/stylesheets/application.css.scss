@@ -84,7 +84,6 @@ body {
   width: 15%;
 }
 
-
 /*Color of login items*/
 .login a {
   text-decoration: none !important;
@@ -539,6 +538,17 @@ body {
   padding-left: 1%;
 }
 
+/* User name format when window is big enough*/
+.hide_small {
+  font-size: 1.15vw;
+  line-height: 40px;
+  height: 40px;
+  display: inline-block;
+  margin-left: 10%;
+  width: 15%;
+}
+
+
 /*change size when window is getting to small*/
 @media (max-width: 1000px) {
   .content {
@@ -550,6 +560,54 @@ body {
   .nav li.topmenu {
     font-size: 2vw;
   }
+  .submenu a{
+    font-size: 1.5vw;
+  }
+  .hide_small {
+    font-size: 0px;
+  }
+  .hide_small_icon {
+    text-align: center;
+  }
+}
+
+.my_progress {
+  background: rgba(210, 210, 210, 1) !important;
+  border:1px solid rgb(210,210,210) !important;
+  height: 1vw !important;
+  width: 15vw;
+}
+
+.my_progress .ui-widget-header{
+  border:1px #00CC66 solid;
+  background: #00CC66;
+  height: 94% !important;
+  margin-top: 0% !important;
+  margin-left: 0.25% !important;
+  /*margin-top: -1% !important;*/
+  /*margin-left: -1% !important;*/
+}
+
+.make_100 {
+  display: table-cell;
+  width: 45%;
+  background: rgba(210,210,210,0.5);
+  border-radius: 15px;
+  height: 100%;
+  margin: 5%;
+  padding: 2%;
+/*  overflow: hidden;
+  height: 100% !important;*/
+}
+
+.right_table {
+  display: inline-block;
+  vertical-align:top;
+}
+
+.left_table {
+  display: inline-block;
+  vertical-align:top;
 }
 
 /* container with divs next to each other */

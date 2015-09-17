@@ -44,10 +44,12 @@
 
       </th>
       <th/>
-      <th>
-      <center>
-         <a class="Bewertung no_link" href ="#"> Bewertung abgeben</a>
-      </center>
+      <th>   
+      <%if @user.events_users.find_by_event_id(@event.id) %>
+        <center>
+           <a class="Bewertung no_link" href ="#"> Bewertung abgeben</a>
+        </center>
+      <%end%>
       </th>
     </tr>
     <tr style="height: 1vw;">
@@ -87,26 +89,29 @@
         <% end %>
       </td>
       <td/>
-      <td> <!-- if user clicks link rating is visible   -->
-        <div2>
-          <!--if the user is logged in, he can see the stars to click.  -->
-          <% form_id = "event_#{@event.id}_rating_#{column_name[a]}" %>
-          <% if logged_in? %> <!-- To avoid throwing an exception if no user is signed in-->
-            <% user_id = current_user.id %>
-            <% rating =  @event.ratings.find_or_create_by(user_id: user_id) %>
+      <td> 
+      <%if @user.events_users.find_by_event_id(@event.id) %>
+        <!-- if user clicks link rating is visible   -->
+          <div2>
+            <!--if the user is logged in, he can see the stars to click.  -->
+            <% form_id = "event_#{@event.id}_rating_#{column_name[a]}" %>
+            <% if logged_in? %> <!-- To avoid throwing an exception if no user is signed in-->
+              <% user_id = current_user.id %>
+              <% rating =  @event.ratings.find_or_create_by(user_id: user_id) %>
 
-            <%= form_for rating, :html => {:id => form_id, :class => "star_rating_form"} do |f| %>
-              <%= f.hidden_field :event_id, :value => @event.id %>
-              <% if logged_in? %>
-                <%= f.hidden_field :user_id, :value => current_user.id %>
-              <% end %>        
-              <%= f.hidden_field :"#{column_name[a]}", :id => form_id + "_stars" %>
+              <%= form_for rating, :html => {:id => form_id, :class => "star_rating_form"} do |f| %>
+                <%= f.hidden_field :event_id, :value => @event.id %>
+                <% if logged_in? %>
+                  <%= f.hidden_field :user_id, :value => current_user.id %>
+                <% end %>        
+                <%= f.hidden_field :"#{column_name[a]}", :id => form_id + "_stars" %>
+              <% end %>
+              <% (1..5).each do |i| %>
+               <li class="rating_star" id="<%= form_id %>_<%= i %>" data-stars="<%= i %>" data-form-id="<%= form_id %>" data-column="<%=column_name[a]%>" data-rating-id="<%= rating.id %>"></li>
+              <% end %>
             <% end %>
-            <% (1..5).each do |i| %>
-             <li class="rating_star" id="<%= form_id %>_<%= i %>" data-stars="<%= i %>" data-form-id="<%= form_id %>" data-column="<%=column_name[a]%>" data-rating-id="<%= rating.id %>"></li>
-            <% end %>
-          <% end %>
-        </div2>
+          </div2>
+      <%end%>
       </td>
   <%end%>
   <tr style="height: 2vw;">

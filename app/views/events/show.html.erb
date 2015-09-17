@@ -65,19 +65,21 @@
   <%= link_to 'Detailbewertung ansehen', rating_path(@event.ratings.find_or_create_by(user_id: current_user.id)), class: 'btn btn-default right_side' %>
 </div>
 <br/>
+
 <div class="container_events" style="background-color: rgba(1,1,1,0)">  
   <!-- if logged in, show the Button to mark an event-->
-  <% if logged_in? %>
-    <% unless @event.users.find_by(id: current_user.id) %>
-
-        <!-- <%= button_to "Veranstaltung hinzufügen", :action => "mark_event", :id => @id%> -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Hinzufügen</button>
-    <% else %>
-    <p class="info_txt">
-         <strong>Die Veranstaltung <%= @event.title %> wurde zu deinem Plan hinzugefügt!</strong>
-    </p>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Ändern oder Entfernen</button>
-    <%end %>
+     <%if current_user.role !="admin"%>
+      <% if logged_in? %>
+        <% unless @event.users.find_by(id: current_user.id) %>
+          <!-- <%= button_to "Veranstaltung hinzufügen", :action => "mark_event", :id => @id%> -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Hinzufügen</button>
+      <% else %>
+      <p class="info_txt">
+           <strong>Die Veranstaltung <%= @event.title %> wurde zu deinem Plan hinzugefügt!</strong>
+      </p>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Ändern oder Entfernen</button>
+      <%end %>
+    <%end%>
 
     <% if can? :edit, Event %>
       <%= link_to 'Bearbeiten', edit_event_path(@event), class: 'btn btn-default' %>
